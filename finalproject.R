@@ -79,16 +79,16 @@ anova(train.glm.v3, train.glm.v4, test="Chi") # not significant; removed dbdista
 
 predict.glm.v4 = predict(train.glm.v4, test.na, type="response")
 
-write.table(predict.glm.v4, file = "testing.csv",sep=",")
+write.table(predict.glm.v4, file = "glmaod.csv",sep=",")
 
-# simple GAM with all predictors - BUGGY
-train.gam.na = gam(voted ~ gender + s(cd,k=6) + s(hd) + s(age) + s(dbdistance,k=3)
-                   + s(vccdistance,k=3) + party + racename + s(hsonly) + s(mrrg)
+# simple GAM with all predictors
+train.gam.na = gam(voted ~ gender + s(cd,k=8) + s(hd) + s(age) + s(dbdistance)
+                   + s(vccdistance) + party + racename + s(hsonly) + s(mrrg)
                    + s(chldprsnt) + s(cath) + s(evang) + s(nonchrst) + s(otherchrst)
-                   + s(days.since.reg) + dbdistance.na + vccdistance.na,
+                   + s(days.since.reg) + dbdistance.na + vccdistance.na + cd.na + hd.na,
                    family=binomial, data=train.na)
-train.gam.na = gam(voted ~ gender+s(cd,k=6)+s(hd)+s(age)+party+racename+s(hsonly)+s(mrrg)
-                   +s(chldprsnt)+s(cath)+s(evang)+s(nonchrst)+s(otherchrst)+s(days.since.reg),
-                      family=binomial,data=train.na)
 summary(train.gam.na)
  
+predict.gam = predict(train.gam.na, test.na, type="response")
+
+write.table(predict.gam, file = "gam.csv",sep=",")
