@@ -1,5 +1,7 @@
 ### STAT 149 FINAL PROJECT SCRIPT ###
 library(mgcv) # for gam
+library(rpart) # for rpart
+library(randomForest) # for randomForest
 
 test = read.csv(file.choose())
 train = read.csv(file.choose())
@@ -92,3 +94,14 @@ summary(train.gam.na)
 predict.gam = predict(train.gam.na, test.na, type="response")
 
 write.table(predict.gam, file = "gam.csv",sep=",")
+
+# random forest
+train.rf.na = randomForest(voted ~ gender + cd + hd + age + dbdistance + vccdistance + party + 
+                             racename + hsonly + mrrg + chldprsnt + cath + evang + nonchrst + 
+                             otherchrst + days.since.reg + cd.na + hd.na + dbdistance.na + 
+                             vccdistance.na,data=train.na)
+
+predict.rf = predict(train.rf.na, test.na, type="prob")
+
+write.csv(predict.rf, file = "rf.csv")
+
