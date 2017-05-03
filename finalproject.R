@@ -103,13 +103,29 @@ train.rf.na = randomForest(voted ~ gender + cd + hd + age + dbdistance + vccdist
                              racename + hsonly + mrrg + chldprsnt + cath + evang + nonchrst + 
                              otherchrst + days.since.reg + cd.na + hd.na + dbdistance.na + 
                              vccdistance.na,data=train.na)
+train.rf.na
 
 predict.rf = predict(train.rf.na, test.na, type="prob")
 
 write.csv(predict.rf, file = "rf.csv")
 
+# random forest with interactions
+train.rf.na.i = randomForest(voted ~ gender + cd + hd + age + party + 
+                               racename + hsonly + mrrg + chldprsnt + cath + evang + nonchrst 
+                               + days.since.reg + dbdistance.na + 
+                               + gender*party + racename*party + party*racename,
+                             mtry=2,data=train.na) # removed otherchrst, cd.na, hd.na, vccdistance.na
+train.rf.na.i
+# mtry = 2; OOB = .2885
+# mtry = 3; OOB = .2914
+# mtry = 5; OOB = .2929
+
+predict.rf.i = predict(train.rf.na.i, test.na, type="prob")
+
+write.csv(predict.rf.i, file = "rf.i.4.csv")
+
 # determining mtry; this code takes forever to run so doesn't really work
-#cv.rf = rfcv(na.roughfix(train.na[,2:21]),train.na$voted,step=0.9)
+# cv.rf = rfcv(na.roughfix(train.na[,2:21]),train.na$voted,step=10.0)
 #cbind(nvars = cv.rf$n.var, error.rate = cv.rf$error.cv)
 
 # fitting classification tree
